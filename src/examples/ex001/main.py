@@ -9,6 +9,7 @@ async def main() -> None:
     model = os.getenv("CHAT_MODEL")
     llm = init_chat_model(model)
 
+    # llm = init_chat_model("ollama:lamma3.1")
     # llm = init_chat_model("openai:gpt-4.1-nano")
     response = await llm.ainvoke("Olá, tudo bem?")
     r.print(response)
