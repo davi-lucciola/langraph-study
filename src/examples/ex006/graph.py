@@ -35,7 +35,10 @@ def tool_node(state: ChatState) -> ChatState:
     return ChatState(messages=[tool_message])
 
 
-def router(state: ChatState) -> Literal["tool_node", "__end__"]:
+type NodeRouter = Literal["tool_node", "__end__"]
+
+
+def router(state: ChatState) -> NodeRouter:
     last_message = state.get_last_message()
 
     is_ai_message = isinstance(last_message, AIMessage)
