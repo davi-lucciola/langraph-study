@@ -1,17 +1,15 @@
-from typing import Literal
-
 from graph import ChatState, build_graph
 from langchain.messages import AIMessage, HumanMessage
 from langchain_core.runnables.config import RunnableConfig
 from rich import print
 from rich.markdown import Markdown
 
-type UserType = Literal["plus", "enterprise"]
+from examples.ex009.context import ChatContext, UserType
 
 
 def main() -> None:
-    user_type: UserType = "enterprise"
-    config = RunnableConfig(configurable={"thread_id": 1, "user_type": user_type})
+    context = ChatContext(user_type=UserType.PLUS)
+    config = RunnableConfig(configurable={"thread_id": 1})
     graph = build_graph()
 
     while True:
@@ -24,7 +22,9 @@ def main() -> None:
             break
 
         human_message = HumanMessage(user_input)
-        result = graph.invoke(ChatState(messages=[human_message]), config=config)
+        result = graph.invoke(
+            ChatState(messages=[human_message]), config=config, context=context
+        )
 
         ai_message: AIMessage = result["messages"][-1]
 
