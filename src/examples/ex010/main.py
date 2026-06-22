@@ -1,15 +1,21 @@
+import asyncio
+
+from checkpointer import build_checkpointer
 from context import ChatContext, UserType
 from graph import ChatState, build_graph
 from langchain.messages import AIMessage, HumanMessage
 from langchain_core.runnables.config import RunnableConfig
 from rich import print
 from rich.markdown import Markdown
+from utils import lifespan
 
 
-def main() -> None:
+def run_graph() -> None:
+    checkpointer = build_checkpointer()
+    graph = build_graph(checkpointer=checkpointer)
+
     context = ChatContext(user_type=UserType.PLUS)
     config = RunnableConfig(configurable={"thread_id": 1})
-    graph = build_graph()
 
     while True:
         print("[bold cyan]YOU: \n-> ", end="")
@@ -29,11 +35,13 @@ def main() -> None:
 
         print("[bold cyan]AI: \n")
         print(Markdown(ai_message.text))
-        print(ai_message)
         print(Markdown("-------"))
 
-    print(graph.get_state(config=config))
+
+async def main():
+    async with lifespan():
+        run_graph()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
