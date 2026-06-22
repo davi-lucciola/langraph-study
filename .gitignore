@@ -11,4 +11,5 @@ wheels/
 .env
 
 # Langgraph
+_local_data
 .langgraph_api
